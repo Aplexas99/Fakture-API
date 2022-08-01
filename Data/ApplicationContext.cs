@@ -1,6 +1,16 @@
-﻿namespace FaktureAPI.Data
+﻿using FaktureAPI.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace FaktureAPI.Data
 {
-    public class ApplicationContext
+    public class ApplicationContext:DbContext
     {
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+            :base(options)
+        {
+
+        }
+
+        public DbSet<Partner> Partners { get; set; }
     }
 }
