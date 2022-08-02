@@ -52,5 +52,20 @@ namespace FaktureAPI.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var partnerToDelete = await _context.Partners.FindAsync(id);
+
+            if (partnerToDelete == null) return NotFound();
+
+            _context.Partners.Remove(partnerToDelete);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }
