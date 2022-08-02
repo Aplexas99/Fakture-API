@@ -37,5 +37,20 @@ namespace FaktureAPI.Controllers
             return CreatedAtAction(nameof(GetById), new { id = partner.Id }, partner);
         }
 
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<IActionResult> Update(int id, Partner partner)
+        {
+            if (id != partner.Id) return BadRequest();
+
+            _context.Entry(partner).State = EntityState.Modified;   
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }
