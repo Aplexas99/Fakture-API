@@ -21,7 +21,7 @@ namespace FaktureAPI.Models
         [Required]
         public string MB { get; set; }
         public string? Pbr { get; set; }
-
+        [MaxLength(3)]
         public List<string>? Banka { get; set; }
  
         public string? Swift { get; set; }
