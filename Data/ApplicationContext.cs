@@ -13,5 +13,6 @@ namespace FaktureAPI.Data
 
         public DbSet<Partner> Partners { get; set; }
         public DbSet<BillBody> BillBodies { get; set; }
+        public DbSet<BillHeader> BillHeaders { get; set; }
     }
 }
