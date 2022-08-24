@@ -1,11 +1,13 @@
 ﻿using FaktureAPI.Data;
 using FaktureAPI.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FaktureAPI.Controllers
 {
+    [EnableCors("CorsPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class BillBodyController : ControllerBase
@@ -24,7 +26,7 @@ namespace FaktureAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
-            var billBody = await _context.BillBodies.FindAsync();
+            var billBody = await _context.BillBodies.FindAsync(id);
             return billBody == null ? NotFound() : Ok(billBody);
         }
 

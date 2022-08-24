@@ -26,7 +26,7 @@ namespace FaktureAPI.Models
         public DateTime DatumIzdavanja { get; set; }
         public string FiskalniBroj { get; set; }
         [ForeignKey(nameof(Partner))]
-        public Partner KupacId { get; set; }
+        public int KupacId { get; set; }
         [Required]
         public decimal UkupanIznos { get; set; }
         public bool Status { get; set; }

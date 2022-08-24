@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FaktureAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FaktureAPI.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220803131851_BillBodyFKfix1")]
+    partial class BillBodyFKfix1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,9 +95,6 @@ namespace FaktureAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("KupacId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("MjestoIzdavanja")
                         .IsRequired()
                         .HasColumnType("text");
@@ -106,6 +105,9 @@ namespace FaktureAPI.Migrations
                     b.Property<string>("Opis")
                         .HasColumnType("text");
 
+                    b.Property<int>("Partner")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
 
@@ -113,6 +115,8 @@ namespace FaktureAPI.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Partner");
 
                     b.ToTable("BillHeaders");
                 });
@@ -165,6 +169,17 @@ namespace FaktureAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Partners");
+                });
+
+            modelBuilder.Entity("FaktureAPI.Models.BillHeader", b =>
+                {
+                    b.HasOne("FaktureAPI.Models.Partner", "KupacId")
+                        .WithMany()
+                        .HasForeignKey("Partner")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KupacId");
                 });
 #pragma warning restore 612, 618
         }

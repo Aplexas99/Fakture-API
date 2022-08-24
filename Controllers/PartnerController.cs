@@ -23,7 +23,7 @@ namespace FaktureAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
-            var partner = await _context.Partners.FindAsync();
+            var partner = await _context.Partners.FindAsync(id);
             return partner == null ? NotFound() : Ok(partner);
         }
 

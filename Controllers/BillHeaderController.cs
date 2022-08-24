@@ -1,11 +1,13 @@
 ﻿using FaktureAPI.Data;
 using FaktureAPI.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FaktureAPI.Controllers
 {
+    [EnableCors("CorsPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class BillHeaderController : ControllerBase
@@ -24,9 +26,27 @@ namespace FaktureAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
-            var billHeader = await _context.BillHeaders.FindAsync();
+            var billHeader = await _context.BillHeaders.FindAsync(id);
             return billHeader == null ? NotFound() : Ok(billHeader);
         }
+
+        [HttpGet("headerId")]
+        [ProducesResponseType(typeof(BillHeader), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<List<BillBody>> GetBillBodiesByHeaderId(int headerId)
+        {
+            List<BillBody> billBodies = new List<BillBody>();
+            IEnumerable<BillBody> bodies = await _context.BillBodies
+                    .Where(b => b.BillHeaderId.Equals(headerId))
+                    .ToListAsync();
+            foreach (BillBody b in bodies)
+            {
+                billBodies.Add(b);
+            }
+
+            return billBodies;
+        }
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -68,6 +88,6 @@ namespace FaktureAPI.Controllers
             return NoContent();
         }
 
-
+        //TODO: Dohvatiti sve stavke računa za dani header
     }
 }

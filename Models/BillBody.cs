@@ -25,7 +25,7 @@ namespace FaktureAPI.Models
         [Required]
         public string Vrijednost { get; set; }
         [ForeignKey(nameof(BillHeader))]
-        public string BillHeaderId { get; set; }
+        public int BillHeaderId { get; set; }
 
 
     }
