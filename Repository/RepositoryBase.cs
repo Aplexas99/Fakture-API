@@ -10,29 +10,29 @@ namespace FaktureAPI.Repository
 
         public RepositoryBase(ApplicationContext applicationContext)
         {
-            this.applicationContext = applicationContext;
+            applicationContext = applicationContext;
         }
 
         public  IQueryable<T> FindAll()
         {
-            return this.applicationContext.Set<T>().AsNoTracking();
+            return applicationContext.Set<T>().AsNoTracking();
         }
         public  IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
         {
-            return this.applicationContext.Set<T>()
+            return applicationContext.Set<T>()
                 .Where(expression).AsNoTracking();
         }
         public void Create(T entity)
         {
-            this.applicationContext.Set<T>().Add(entity);
+            applicationContext.Set<T>().Add(entity);
         }
         public void Update(T entity)
         {
-            this.applicationContext.Set<T>().Update(entity);
+            applicationContext.Set<T>().Update(entity);
         }
         public void Delete(T entity)
         {
-            this.applicationContext.Set<T>().Remove(entity);
+            applicationContext.Set<T>().Remove(entity);
         }
     }
 }
