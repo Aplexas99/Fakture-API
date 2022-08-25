@@ -47,11 +47,30 @@ namespace FaktureAPI.Controllers
         }
 
 
-        // TODO: Vidjet zašto izbacio object has no reference, problem je u contextu vjv
-    /*    [HttpGet("id")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(BillBody), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-      */ 
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var billbody = await _repository.BillBody.GetById(id);
+                if (billbody is null)
+                {
+                    
+                    return NotFound();
+                }
+                else
+                {
+                    var billBodyResult = _mapper.Map<BillBodyDTO>(billbody);
+                    return Ok(billBodyResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
     }
 }
