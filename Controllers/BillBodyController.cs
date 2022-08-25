@@ -1,4 +1,6 @@
-﻿using FaktureAPI.Data;
+﻿using AutoMapper;
+using FaktureAPI.Data;
+using FaktureAPI.DTOs;
 using FaktureAPI.Models;
 using FaktureAPI.Repository;
 using Microsoft.AspNetCore.Cors;
@@ -15,12 +17,14 @@ namespace FaktureAPI.Controllers
     {
 
         private IRepositoryWrapper _repository;
+        private IMapper _mapper;
 
         
-        public BillBodyController(IRepositoryWrapper repository)
+        public BillBodyController(IRepositoryWrapper repository, IMapper mapper)
         {
 
             _repository = repository;
+            _mapper = mapper;
         }
 
 
@@ -30,7 +34,8 @@ namespace FaktureAPI.Controllers
             try
             {
                 var billBodies =  await _repository.BillBody.GetAll();
-                
+
+                var billBodiesResult = _mapper.Map<IEnumerable<BillBodyDTO>>(billBodies);
                 
 
                 return Ok(billBodies);
