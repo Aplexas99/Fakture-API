@@ -38,13 +38,16 @@ namespace FaktureAPI.Controllers
                 var billBodiesResult = _mapper.Map<IEnumerable<BillBodyDTO>>(billBodies);
                 
 
-                return Ok(billBodies);
+                return Ok(billBodiesResult);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+
+
+        // TODO: Vidjet zašto izbacio object has no reference, problem je u contextu vjv
     /*    [HttpGet("id")]
         [ProducesResponseType(typeof(BillBody), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

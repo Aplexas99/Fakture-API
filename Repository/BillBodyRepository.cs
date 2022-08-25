@@ -6,8 +6,10 @@ namespace FaktureAPI.Repository
 {
     public class BillBodyRepository : RepositoryBase<BillBody>, IBillBodyRepository
     {
+
         public BillBodyRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
+
         }
 
         public async Task<IEnumerable<BillBody>> GetAll()

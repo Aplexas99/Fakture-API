@@ -1,5 +1,6 @@
 using FaktureAPI;
 using FaktureAPI.Data;
+using FaktureAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -8,6 +9,10 @@ var corsPolicy = "CorsPolicy";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IBillBodyRepository, BillBodyRepository>();
+builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+
 builder.Services.AddControllers();
 
 builder.Services.ConfigureRepositoryWrapper();

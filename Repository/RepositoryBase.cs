@@ -8,9 +8,9 @@ namespace FaktureAPI.Repository
     {
         protected ApplicationContext applicationContext { get; set; }
 
-        public RepositoryBase(ApplicationContext applicationContext)
+        public RepositoryBase(ApplicationContext appContext)
         {
-            applicationContext = applicationContext;
+            applicationContext = appContext;
         }
 
         public  IQueryable<T> FindAll()
