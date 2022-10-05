@@ -89,7 +89,7 @@ namespace FaktureAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<IActionResult> Update(int id, [FromBody]BillBody billBody)
+        public async Task<IActionResult> Update(int id, [FromBody]BillBodyForUpdateDTO billBody)
         {
             
             var body = await _repository.BillBody.GetById(id);

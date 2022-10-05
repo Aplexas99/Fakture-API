@@ -9,6 +9,7 @@ namespace FaktureAPI
         public MappingProfile()
         {
             CreateMap<BillBody, BillBodyDTO>();
+            CreateMap<BillBodyForUpdateDTO, BillBody>();
         }
     }
     
