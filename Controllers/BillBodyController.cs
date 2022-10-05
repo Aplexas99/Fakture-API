@@ -47,7 +47,7 @@ namespace FaktureAPI.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "BillBodyById")]
         [ProducesResponseType(typeof(BillBody), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
@@ -70,6 +70,53 @@ namespace FaktureAPI.Controllers
             {
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> Create(BillBody billBody)
+        {
+            var newBody = _mapper.Map<BillBody>(billBody);
+
+            _repository.BillBody.Create(newBody);
+            await _repository.SaveAsync();
+
+            return CreatedAtRoute(nameof(GetById), new { id = newBody.Id }, newBody);
+        }
+
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<IActionResult> Update(int id, [FromBody]BillBody billBody)
+        {
+            
+            var body = await _repository.BillBody.GetById(id);
+
+            _mapper.Map(billBody, body);
+
+            _repository.BillBody.Update(body);
+            await _repository.SaveAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var billBodyToDelete = await _repository.BillBody.GetById(id);
+
+            if (billBodyToDelete == null) return NotFound();
+
+            _repository.BillBody.Delete(billBodyToDelete);
+
+            await _repository.SaveAsync();
+
+            return NoContent();
         }
 
     }
