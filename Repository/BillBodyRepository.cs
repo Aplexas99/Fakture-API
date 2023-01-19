@@ -26,6 +26,12 @@ namespace FaktureAPI.Repository
             .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<BillBody>> GetBillBodiesByBillHeaderId(int id)
+        {
+            return await FindByCondition(b => b.BillHeaderId.Equals(id))
+                .ToListAsync();
+        }
+
         public void CreateBillBody(BillBody billBody)
         {
             Create(billBody);

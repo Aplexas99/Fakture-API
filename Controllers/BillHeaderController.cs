@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace FaktureAPI.Controllers
 {
     [EnableCors("CorsPolicy")]
@@ -44,13 +45,30 @@ namespace FaktureAPI.Controllers
             }
         }
 
-        [HttpGet("id")]
+
+        [HttpGet("{id}", Name= "BillHeaderById")]
         [ProducesResponseType(typeof(BillHeader), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
-            var billHeader = await _context.BillHeaders.FindAsync(id);
-            return billHeader == null ? NotFound() : Ok(billHeader);
+            try
+            {
+                var billheader = await _repository.BillHeader.GetById(id);
+                if (billheader is null)
+                {
+
+                    return NotFound();
+                }
+                else
+                {
+                    var billHeaderResult = _mapper.Map<BillHeaderDTO>(billheader);
+                    return Ok(billHeaderResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
 
@@ -62,7 +80,7 @@ namespace FaktureAPI.Controllers
         public async Task<List<BillBody>> GetBillBodiesByHeaderId(int headerId)
         {
             List<BillBody> billBodies = new List<BillBody>();
-            IEnumerable<BillBody> bodies = await _context.BillBodies
+            IEnumerable<BillBody> bodies = await _repository.BillBody.GetAll()
                     .Where(b => b.BillHeaderId.Equals(headerId))
                     .ToListAsync();
             foreach (BillBody b in bodies)
