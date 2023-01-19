@@ -177,5 +177,31 @@ namespace FaktureAPI.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        // async Get partner by "KupacId" from BillHeader
+        [HttpGet("PartnerByKupacId")]
+        [ProducesResponseType(typeof(Partner), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetPartnerByKupacId(int kupacId)
+        {
+            try
+            {
+                var partner = await _repository.Partner.GetPartnerByKupacId(kupacId);
+                if (partner is null)
+                {
+
+                    return NotFound();
+                }
+                else
+                {
+                    var partnerResult = _mapper.Map<PartnerDTO>(partner);
+                    return Ok(partnerResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
