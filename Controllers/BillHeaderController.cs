@@ -80,14 +80,12 @@ namespace FaktureAPI.Controllers
         public async Task<List<BillBody>> GetBillBodiesByHeaderId(int headerId)
         {
             List<BillBody> billBodies = new List<BillBody>();
-            IEnumerable<BillBody> bodies = await _repository.BillBody.GetAll()
-                    .Where(b => b.BillHeaderId.Equals(headerId))
-                    .ToListAsync();
-            foreach (BillBody b in bodies)
-            {
-                billBodies.Add(b);
-            }
+            IEnumerable<BillBody> bodies = await _repository.BillBody.GetBillBodiesByBillHeaderId(headerId);
 
+            foreach (var body in bodies)
+            {
+                billBodies.Add(body);
+            }
             return billBodies;
         }
 
@@ -96,42 +94,88 @@ namespace FaktureAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Create(BillHeader billHeader)
         {
-            await _context.BillHeaders.AddAsync(billHeader);
-            await _context.SaveChangesAsync();
+            try
+            {
+                if (billHeader is null)
+                {
+                    return BadRequest("BillHeader object is null");
+                }
 
-            return CreatedAtAction(nameof(GetById), new { id = billHeader.Id }, billHeader);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
+
+                var newHeader = _mapper.Map<BillHeader>(billHeader);
+
+                _repository.BillHeader.Create(newHeader);
+                await _repository.SaveAsync();
+
+                return CreatedAtRoute("BillHeaderById", new { id = newHeader.Id }, newHeader);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
-
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<IActionResult> Update(int id, BillHeader billHeader)
+        public async Task<IActionResult> Update(int id, [FromBody] BillHeaderForUpdateDTO billHeader)
         {
-            if (id != billHeader.Id) return BadRequest();
+            try
+            {
+                if (billHeader is null)
+                {
+                    return BadRequest("BillHeader object is null");
+                }
 
-            _context.Entry(billHeader).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
 
-            return NoContent();
+                var header = await _repository.BillHeader.GetById(id);
+
+                _mapper.Map(billHeader, header);
+
+                _repository.BillHeader.Update(header);
+                await _repository.SaveAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
         public async Task<IActionResult> Delete(int id)
         {
-            var billHeaderToDelete = await _context.BillHeaders.FindAsync(id);
+            try
+            {
+                var header = await _repository.BillHeader.GetById(id);
 
-            if (billHeaderToDelete == null) return NotFound();
+                if (header is null)
+                {
+                    return NotFound();
+                }
 
-            _context.BillHeaders.Remove(billHeaderToDelete);
-            await _context.SaveChangesAsync();
-            return NoContent();
+                _repository.BillHeader.Delete(header);
+                await _repository.SaveAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
-
-        //TODO: Dohvatiti sve stavke računa za dani header
     }
 }
