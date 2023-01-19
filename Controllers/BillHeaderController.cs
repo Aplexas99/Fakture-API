@@ -108,14 +108,14 @@ namespace FaktureAPI.Controllers
 
                 var newHeader = _mapper.Map<BillHeader>(billHeader);
 
-                _repository.BillHeader.Create(newHeader);
+                _repository.BillHeader.CreateHeader(newHeader);
                 await _repository.SaveAsync();
 
                 return CreatedAtRoute("BillHeaderById", new { id = newHeader.Id }, newHeader);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -141,14 +141,14 @@ namespace FaktureAPI.Controllers
 
                 _mapper.Map(billHeader, header);
 
-                _repository.BillHeader.Update(header);
+                _repository.BillHeader.UpdateHeader(header);
                 await _repository.SaveAsync();
 
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -167,14 +167,14 @@ namespace FaktureAPI.Controllers
                     return NotFound();
                 }
 
-                _repository.BillHeader.Delete(header);
+                _repository.BillHeader.DeleteHeader(header);
                 await _repository.SaveAsync();
 
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -186,7 +186,7 @@ namespace FaktureAPI.Controllers
         {
             try
             {
-                var partner = await _repository.Partner.GetPartnerByKupacId(kupacId);
+                var partner = await _repository.Partner.GetById(kupacId);
                 if (partner is null)
                 {
 
@@ -200,7 +200,7 @@ namespace FaktureAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error");
+                return BadRequest(ex.Message);
             }
         }
     }

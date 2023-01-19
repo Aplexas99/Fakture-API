@@ -68,7 +68,7 @@ namespace FaktureAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -78,7 +78,7 @@ namespace FaktureAPI.Controllers
         {
             var newBody = _mapper.Map<BillBody>(billBody);
 
-            _repository.BillBody.Create(newBody);
+            _repository.BillBody.CreateBody(newBody);
             await _repository.SaveAsync();
 
             return CreatedAtRoute(nameof(GetById), new { id = newBody.Id }, newBody);
@@ -96,9 +96,10 @@ namespace FaktureAPI.Controllers
 
             _mapper.Map(billBody, body);
 
-            _repository.BillBody.Update(body);
+            _repository.BillBody.UpdateBody(body);
             await _repository.SaveAsync();
 
+    
             return NoContent();
         }
 
@@ -112,7 +113,7 @@ namespace FaktureAPI.Controllers
 
             if (billBodyToDelete == null) return NotFound();
 
-            _repository.BillBody.Delete(billBodyToDelete);
+            _repository.BillBody.DeleteBody(billBodyToDelete);
 
             await _repository.SaveAsync();
 

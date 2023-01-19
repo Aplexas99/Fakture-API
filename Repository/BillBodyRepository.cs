@@ -32,15 +32,15 @@ namespace FaktureAPI.Repository
                 .ToListAsync();
         }
 
-        public void CreateBillBody(BillBody billBody)
+        public void CreateBody(BillBody billBody)
         {
             Create(billBody);
         }
-        public void UpdateBillBody(BillBody billBody)
+        public void UpdateBody(BillBody billBody)
         {
             Update(billBody);
         }
-        public void DeleteBillBody(BillBody billBody)
+        public void DeleteBody(BillBody billBody)
         {
             Delete(billBody);
         }

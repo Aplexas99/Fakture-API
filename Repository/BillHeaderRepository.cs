@@ -26,15 +26,15 @@ namespace FaktureAPI.Repository
             .FirstOrDefaultAsync();
         }
 
-        public void CreateBillHeader(BillHeader billHeader)
+        public void CreateHeader(BillHeader billHeader)
         {
             Create(billHeader);
         }
-        public void UpdateBillHeader(BillHeader billHeader)
+        public void UpdateHeader(BillHeader billHeader)
         {
             Update(billHeader);
         }
-        public void DeleteBillHeader(BillHeader billHeader)
+        public void DeleteHeader(BillHeader billHeader)
         {
             Delete(billHeader);
         }

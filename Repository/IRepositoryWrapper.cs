@@ -4,6 +4,7 @@
     {
         IBillBodyRepository BillBody { get; }
         IBillHeaderRepository BillHeader { get; }
+        IPartnerRepository Partner { get; }
 
         Task SaveAsync();
     }

@@ -7,9 +7,9 @@ namespace FaktureAPI.Repository
         Task<IEnumerable<BillBody>> GetAll();
         Task<BillBody> GetById(int id);
         Task<IEnumerable<BillBody>> GetBillBodiesByBillHeaderId(int id);
-        void Create(BillBody owner);
-        void Update(BillBody owner);
-        void Delete(BillBody owner);
+        void CreateBody(BillBody owner);
+        void UpdateBody(BillBody owner);
+        void DeleteBody(BillBody owner);
 
     }
 }

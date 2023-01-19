@@ -1,5 +1,8 @@
-﻿using FaktureAPI.Data;
+﻿using AutoMapper;
+using FaktureAPI.Data;
+using FaktureAPI.DTOs;
 using FaktureAPI.Models;
+using FaktureAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,62 +13,140 @@ namespace FaktureAPI.Controllers
     [ApiController]
     public class PartnerController : ControllerBase
     {
-        private readonly ApplicationContext _context;
+        private IRepositoryWrapper _repository;
+        private IMapper _mapper;
 
-        public PartnerController(ApplicationContext context) => _context = context;
-
+        public PartnerController(IRepositoryWrapper repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
 
         [HttpGet]
-        public async Task<IEnumerable<Partner>> Get() => await _context.Partners.ToListAsync();
-        
-        [HttpGet("id")]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var partners = await _repository.Partner.GetAll();
+
+                var partnersResult = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
+
+                return Ok(partnersResult);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}", Name = "PartnerById")]
         [ProducesResponseType(typeof(Partner), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
-            var partner = await _context.Partners.FindAsync(id);
-            return partner == null ? NotFound() : Ok(partner);
+            try
+            {
+                var partner = await _repository.Partner.GetById(id);
+                if (partner is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var partnerResult = _mapper.Map<PartnerDTO>(partner);
+                    return Ok(partnerResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Create(Partner partner)
+            [HttpPost]
+        public async Task<IActionResult> CreatePartner(Partner partner)
         {
-            await _context.Partners.AddAsync(partner);
-            await _context.SaveChangesAsync();
+            try
+            {
+                if (partner is null)
+                {
+                    return BadRequest("Partner object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
 
-            return CreatedAtAction(nameof(GetById), new { id = partner.Id }, partner);
+                var newPartner = _mapper.Map<Partner>(partner);
+
+                _repository.Partner.CreatePartner(newPartner);
+                await _repository.SaveAsync();
+
+                return CreatedAtRoute("PartnerById", new { id = newPartner.Id }, newPartner);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-        public async Task<IActionResult> Update(int id, Partner partner)
+        public async Task<IActionResult> UpdatePartner(int id, [FromBody] PartnerForUpdateDTO partner)
         {
-            if (id != partner.Id) return BadRequest();
+            try
+            {
+                if (partner is null)
+                {
+                    return BadRequest("Partner object is null");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid model object");
+                }
 
-            _context.Entry(partner).State = EntityState.Modified;   
-            await _context.SaveChangesAsync();
+                var partnerEntity = await _repository.Partner.GetById(id);
+                if (partnerEntity is null)
+                {
+                    return NotFound();
+                }
 
-            return NoContent();
+                _mapper.Map(partner, partnerEntity);
+
+                _repository.Partner.UpdatePartner(partnerEntity);
+                await _repository.SaveAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeletePartner(int id)
         {
-            var partnerToDelete = await _context.Partners.FindAsync(id);
+            try
+            {
+                var partner = await _repository.Partner.GetById(id);
+                if (partner is null)
+                {
+                    return NotFound();
+                }
 
-            if (partnerToDelete == null) return NotFound();
+                _repository.Partner.DeletePartner(partner);
+                await _repository.SaveAsync();
 
-            _context.Partners.Remove(partnerToDelete);
-            await _context.SaveChangesAsync();
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+        
+        
+
 
     }
 }
