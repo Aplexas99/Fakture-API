@@ -10,6 +10,8 @@ namespace FaktureAPI
         {
             CreateMap<BillBody, BillBodyDTO>();
             CreateMap<BillBodyForUpdateDTO, BillBody>();
+            CreateMap < BillHeader,BillHeaderDTO)> ();
+            CreateMap<BillHeaderForUpdateDTO, BillHeader>();
         }
     }
     
