@@ -1,5 +1,8 @@
-﻿using FaktureAPI.Data;
+﻿using AutoMapper;
+using FaktureAPI.Data;
+using FaktureAPI.DTOs;
 using FaktureAPI.Models;
+using FaktureAPI.Repository;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +16,33 @@ namespace FaktureAPI.Controllers
     public class BillHeaderController : ControllerBase
     {
 
-        private readonly ApplicationContext _context;
+        private IRepositoryWrapper _repository;
+        private IMapper _mapper;
 
-        public BillHeaderController(ApplicationContext context) => _context = context;
+        public BillHeaderController(IRepositoryWrapper repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
 
+      
 
         [HttpGet]
-        public async Task<IEnumerable<BillHeader>> Get() => await _context.BillHeaders.ToListAsync();
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var billHeaders = await _repository.BillHeader.GetAll();
+
+                var billHeadersResult = _mapper.Map<IEnumerable<BillHeaderDTO>>(billHeaders);
+
+                return Ok(billHeadersResult);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("id")]
         [ProducesResponseType(typeof(BillHeader), StatusCodes.Status200OK)]
@@ -29,6 +52,9 @@ namespace FaktureAPI.Controllers
             var billHeader = await _context.BillHeaders.FindAsync(id);
             return billHeader == null ? NotFound() : Ok(billHeader);
         }
+
+
+        
 
         [HttpGet("headerId")]
         [ProducesResponseType(typeof(BillHeader), StatusCodes.Status200OK)]
