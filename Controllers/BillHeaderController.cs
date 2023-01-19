@@ -74,7 +74,7 @@ namespace FaktureAPI.Controllers
 
         
 
-        [HttpGet("headerId")]
+        [HttpGet("BodiesWithHeaderId")]
         [ProducesResponseType(typeof(BillHeader), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<List<BillBody>> GetBillBodiesByHeaderId(int headerId)

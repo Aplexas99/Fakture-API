@@ -6,6 +6,7 @@ namespace FaktureAPI.Repository
     {
         private ApplicationContext _appContext;
         private IBillBodyRepository _billBody;
+        private IBillHeaderRepository _billHeader;
 
         public IBillBodyRepository BillBody
         {
@@ -16,6 +17,18 @@ namespace FaktureAPI.Repository
                     _billBody = new BillBodyRepository(_appContext);
                 }
                 return _billBody;
+            }
+        }
+
+        public IBillHeaderRepository BillHeader
+        {
+            get
+            {
+                if (_billHeader == null)
+                {
+                    _billHeader = new BillHeaderRepository(_appContext);
+                }
+                return _billHeader;
             }
         }
 
