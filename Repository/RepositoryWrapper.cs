@@ -8,6 +8,7 @@ namespace FaktureAPI.Repository
         private IBillBodyRepository _billBody;
         private IBillHeaderRepository _billHeader;
         private IPartnerRepository _partner;
+        private IJobRepository _job;
         public IBillBodyRepository BillBody
         {
             get
@@ -44,6 +45,17 @@ namespace FaktureAPI.Repository
             }
         }
 
+        public IJobRepository Job
+        {
+            get
+            {
+                if (_job == null)
+                {
+                    _job = new JobRepository(_appContext);
+                }
+                return _job;
+            }
+        }
         public RepositoryWrapper(ApplicationContext appContext)
         {
             _appContext = appContext;

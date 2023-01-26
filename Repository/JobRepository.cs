@@ -4,35 +4,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FaktureAPI.Repository
 {
-    public class JobRepository : RepositoryBase<Job>, IJobRepository
+    public class PartnerRepository : RepositoryBase<Partner>, IPartnerRepository
     {
-        public JobRepository(ApplicationContext repositoryContext)
+        public PartnerRepository(ApplicationContext repositoryContext)
             : base(repositoryContext)
         {
         }
 
 
-        public async Task<IEnumerable<Job>> GetAll()
+        public async Task<IEnumerable<Partner>> GetAll()
         {
             return await FindAll()
                 .OrderBy(p => p.Id)
                 .ToListAsync();
         }
-        public async Task<Job> GetById(int id)
+        public async Task<Partner> GetById(int id)
         {
             return await FindByCondition(p => p.Id.Equals(id))
                 .FirstOrDefaultAsync();
         }
-        public void CreateJob(Job job){   
-            Create(job);
-        }
-        public void UpdateJob(Job job)
+        public void CreatePartner(Partner partner)
         {
-            Update(job);
+            Create(partner);
         }
-        public void DeleteJob(Job job)
+        public void UpdatePartner(Partner partner)
         {
-            Delete(job);
+            Update(partner);
+        }
+        public void DeletePartner(Partner partner)
+        {
+            Delete(partner);
         }
         
         

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FaktureAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FaktureAPI.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230126151449_JobAdded")]
+    partial class JobAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,29 +117,6 @@ namespace FaktureAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BillHeaders");
-                });
-
-            modelBuilder.Entity("FaktureAPI.Models.Job", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("CijenaDeviza")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("CijenaKm")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Naziv")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("FaktureAPI.Models.Partner", b =>

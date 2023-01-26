@@ -14,6 +14,8 @@ namespace FaktureAPI
             CreateMap<BillHeaderForUpdateDTO, BillHeader>();
             CreateMap<Partner, PartnerDTO>();
             CreateMap<PartnerForUpdateDTO, Partner>();
+            CreateMap<Job, JobDTO>();
+            CreateMap<JobForUpdateDTO, Job>();
         }
     }
     
