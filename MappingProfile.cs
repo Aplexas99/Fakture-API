@@ -8,14 +8,14 @@ namespace FaktureAPI
     {
         public MappingProfile()
         {
-            CreateMap<BillBody, BillBodyDTO>();
-            CreateMap<BillBodyForUpdateDTO, BillBody>();
-            CreateMap<BillHeader, BillHeaderDTO>();
-            CreateMap<BillHeaderForUpdateDTO, BillHeader>();
-            CreateMap<Partner, PartnerDTO>();
-            CreateMap<PartnerForUpdateDTO, Partner>();
-            CreateMap<Job, JobDTO>();
-            CreateMap<JobForUpdateDTO, Job>();
+            CreateMap<BillBody, BillBodyDTO>().ReverseMap();
+            CreateMap<BillBodyForUpdateDTO, BillBody>().ReverseMap();
+            CreateMap<BillHeader, BillHeaderDTO>().ReverseMap();
+            CreateMap<BillHeaderForUpdateDTO, BillHeader>().ReverseMap();
+            CreateMap<Partner, PartnerDTO>().ReverseMap();
+            CreateMap<PartnerForUpdateDTO, Partner>().ReverseMap();
+            CreateMap<Job, JobDTO>().ReverseMap();
+            CreateMap<JobForUpdateDTO, Job>().ReverseMap();
         }
     }
     

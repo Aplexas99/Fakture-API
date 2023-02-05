@@ -2,17 +2,19 @@ using FaktureAPI;
 using FaktureAPI.Data;
 using FaktureAPI.Repository;
 using Microsoft.EntityFrameworkCore;
-
+using NLog;
 
 var corsPolicy = "CorsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+
 builder.Services.AddScoped<IBillBodyRepository, BillBodyRepository>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
-
+builder.Services.ConfigureLoggerService();
 builder.Services.AddControllers();
 
 builder.Services.ConfigureRepositoryWrapper();
